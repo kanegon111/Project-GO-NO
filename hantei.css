@@ -1,0 +1,144 @@
+/* ====== Theme variables ====== */
+:root {
+    --bg-deep: #0a0a1a;
+
+    --text-primary: #f1f5f9;
+    --text-secondary: #cbd5e1;
+    --text-tertiary: #94a3b8;
+
+    --glass-bg: rgba(255, 255, 255, 0.04);
+    --glass-bg-hover: rgba(255, 255, 255, 0.06);
+    --glass-border: rgba(255, 255, 255, 0.08);
+
+    --accent-cyan: #22d3ee;
+    --accent-emerald: #34d399;
+    --accent-rose: #fb7185;
+    --accent-amber: #fbbf24;
+}
+
+/* ====== Base ====== */
+body {
+    font-family: 'Inter', 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
+    background-color: var(--bg-deep);
+    background-image:
+        radial-gradient(ellipse at 15% 0%,   rgba(168, 85, 247, 0.28) 0px, transparent 55%),
+        radial-gradient(ellipse at 85% 5%,   rgba(6, 182, 212, 0.22)  0px, transparent 55%),
+        radial-gradient(ellipse at 50% 100%, rgba(244, 63, 94, 0.18)  0px, transparent 55%);
+    background-attachment: fixed;
+    color: var(--text-primary);
+    min-height: 100vh;
+    letter-spacing: -0.01em;
+}
+
+/* ====== Glassmorphism card ====== */
+.glass {
+    background: var(--glass-bg);
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    border: 1px solid var(--glass-border);
+    border-radius: 1rem;
+    box-shadow:
+        0 8px 32px rgba(0, 0, 0, 0.35),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    transition: background 0.25s ease, border-color 0.25s ease, transform 0.25s ease;
+}
+
+.glass:hover {
+    background: var(--glass-bg-hover);
+    border-color: rgba(255, 255, 255, 0.12);
+}
+
+/* ====== Dark input ====== */
+.input-dark {
+    width: 100%;
+    background: rgba(0, 0, 0, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 0.625rem;
+    color: var(--text-primary);
+    transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+}
+
+.input-dark:focus {
+    outline: none;
+    background: rgba(0, 0, 0, 0.35);
+    border-color: var(--accent-cyan);
+    box-shadow: 0 0 0 3px rgba(34, 211, 238, 0.18);
+}
+
+.input-dark::placeholder {
+    color: rgba(255, 255, 255, 0.3);
+}
+
+/* ====== Gradient title text ====== */
+.text-gradient {
+    background: linear-gradient(120deg, #f8fafc 0%, #c7d2fe 50%, #a5f3fc 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+/* ====== Decision panel states (glow) ====== */
+.decision-go {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.16) 0%, rgba(6, 182, 212, 0.06) 100%);
+    border: 1px solid rgba(52, 211, 153, 0.35);
+    box-shadow:
+        0 0 48px rgba(16, 185, 129, 0.20),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.decision-nogo {
+    background: linear-gradient(135deg, rgba(244, 63, 94, 0.16) 0%, rgba(168, 85, 247, 0.06) 100%);
+    border: 1px solid rgba(251, 113, 133, 0.35);
+    box-shadow:
+        0 0 48px rgba(244, 63, 94, 0.20),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.decision-review {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.16) 0%, rgba(168, 85, 247, 0.06) 100%);
+    border: 1px solid rgba(251, 191, 36, 0.35);
+    box-shadow:
+        0 0 48px rgba(245, 158, 11, 0.20),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.text-go     { color: var(--accent-emerald); text-shadow: 0 0 24px rgba(52, 211, 153, 0.55); }
+.text-nogo   { color: var(--accent-rose);    text-shadow: 0 0 24px rgba(251, 113, 133, 0.55); }
+.text-review { color: var(--accent-amber);   text-shadow: 0 0 24px rgba(251, 191, 36, 0.55); }
+
+.icon-go     { color: var(--accent-emerald); filter: drop-shadow(0 0 10px rgba(52, 211, 153, 0.65)); }
+.icon-nogo   { color: var(--accent-rose);    filter: drop-shadow(0 0 10px rgba(251, 113, 133, 0.65)); }
+.icon-review { color: var(--accent-amber);   filter: drop-shadow(0 0 10px rgba(251, 191, 36, 0.65)); }
+
+.icon-accent { filter: drop-shadow(0 0 12px rgba(34, 211, 238, 0.6)); }
+
+/* ====== Number input cleanup ====== */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+/* ====== Input warning flash ====== */
+.input-warning {
+    border-color: var(--accent-amber) !important;
+    box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.22) !important;
+}
+
+/* ====== Custom scrollbar (Webkit) ====== */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.18); }
+
+/* ====== Fade-in for page load ====== */
+@keyframes fadeUp {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+.glass {
+    animation: fadeUp 0.5s ease-out both;
+}

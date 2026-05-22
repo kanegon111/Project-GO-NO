@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>プロジェクトGo/No-Go判定ダッシュボード</title>
+
+    <!-- Google Font: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+
+    <!-- Tailwind CSS (デザイン用) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome (アイコン用) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js (グラフ用) -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- 独自スタイル -->
+    <link rel="stylesheet" href="css/hantei.css">
+</head>
+<body class="min-h-screen p-6">
+
+    <div class="max-w-6xl mx-auto space-y-6">
+        <header class="mb-8">
+            <h1 class="text-3xl md:text-4xl font-extrabold flex items-center gap-3">
+                <i class="fa-solid fa-bullseye text-cyan-400 icon-accent"></i>
+                <span class="text-gradient">プロジェクト Go / No-Go ダッシュボード</span>
+            </h1>
+            <p class="text-slate-400 mt-2">入力された指標に基づき、スピーディーにプロジェクトの実行可否を判定します。</p>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+            <div class="lg:col-span-4 space-y-6">
+                <div class="glass p-6">
+                    <h2 class="text-lg font-bold text-slate-100 mb-5 flex items-center gap-2">
+                        <i class="fa-solid fa-calculator text-cyan-400"></i> 条件入力
+                    </h2>
+
+                    <div class="space-y-4">
+                        <div>
+                            <label for="input-investment" class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5">投資額 (万円)</label>
+                            <div class="relative">
+                                <i class="fa-solid fa-yen-sign absolute left-3 top-3 text-slate-500"></i>
+                                <input type="number" id="input-investment" value="500" min="0" class="input-dark pl-8 pr-3 py-2">
+                            </div>
+                        </div>
+                        <div>
+                            <label for="input-expected" class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5">見込み額・リターン (万円)</label>
+                            <div class="relative">
+                                <i class="fa-solid fa-yen-sign absolute left-3 top-3 text-slate-500"></i>
+                                <input type="number" id="input-expected" value="1200" min="0" class="input-dark pl-8 pr-3 py-2">
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label for="input-duration" class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5">期間 (ヶ月)</label>
+                                <div class="relative">
+                                    <i class="fa-regular fa-clock absolute left-3 top-3 text-slate-500"></i>
+                                    <input type="number" id="input-duration" value="6" min="0" class="input-dark pl-8 pr-3 py-2">
+                                </div>
+                            </div>
+                            <div>
+                                <label for="input-effort" class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5">工数 (人月)</label>
+                                <div class="relative">
+                                    <i class="fa-solid fa-users absolute left-3 top-3 text-slate-500"></i>
+                                    <input type="number" id="input-effort" value="20" min="0" class="input-dark pl-8 pr-3 py-2">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="border-t border-white/10 pt-4 mt-2">
+                            <h3 class="text-xs font-bold text-slate-300 uppercase tracking-wider mb-3">管理者投票結果</h3>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label for="input-total-mgr" class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5">管理者総数</label>
+                                    <input type="number" id="input-total-mgr" value="5" min="0" class="input-dark px-3 py-2">
+                                </div>
+                                <div>
+                                    <label for="input-approved-mgr" class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5">賛同者数</label>
+                                    <input type="number" id="input-approved-mgr" value="4" min="0" class="input-dark px-3 py-2">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="lg:col-span-8 space-y-6">
+                <!-- 判定パネル -->
+                <div id="decision-panel" class="glass p-6">
+                    <div class="flex items-start justify-between gap-4">
+                        <div>
+                            <h3 class="text-xs font-bold uppercase tracking-widest mb-2 text-slate-400">システム判定結果</h3>
+                            <div class="flex items-center gap-3 mt-2">
+                                <i id="decision-icon" class="fa-solid fa-circle-notch text-3xl"></i>
+                                <span id="decision-text" class="text-4xl md:text-5xl font-black"></span>
+                            </div>
+                            <p id="decision-reason" class="mt-3 text-slate-200 font-medium"></p>
+                        </div>
+                        <div class="text-right shrink-0">
+                            <p class="text-xs text-slate-400 font-bold uppercase tracking-wider mb-1">総合スコア</p>
+                            <p class="text-4xl md:text-5xl font-extrabold text-slate-50">
+                                <span id="score-text">0</span><span class="text-lg text-slate-500 font-medium">/100</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- KPI指標 -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="glass p-5">
+                        <p class="text-xs text-slate-400 font-bold uppercase tracking-wider mb-2">見込み利益</p>
+                        <p id="profit-text" class="text-2xl font-bold"></p>
+                    </div>
+                    <div class="glass p-5">
+                        <p class="text-xs text-slate-400 font-bold uppercase tracking-wider mb-2">ROI</p>
+                        <p id="roi-text" class="text-2xl font-bold"></p>
+                    </div>
+                    <div class="glass p-5 flex items-center justify-between">
+                        <div>
+                            <p class="text-xs text-slate-400 font-bold uppercase tracking-wider mb-2">管理者賛同率</p>
+                            <p id="approval-text" class="text-2xl font-bold text-slate-50"></p>
+                            <p id="approval-subtext" class="text-xs text-slate-500 mt-1"></p>
+                        </div>
+                        <div class="h-16 w-16 shrink-0">
+                            <canvas id="pieChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- グラフ -->
+                <div class="glass p-6">
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-4">投資額 vs 見込み額</h3>
+                    <div class="h-64">
+                        <canvas id="barChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ロジック -->
+    <script src="js/hantei.js"></script>
+</body>
+</html>
